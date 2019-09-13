@@ -4,12 +4,12 @@ import yaml
 import numpy as np
 import cv2
 
-# fn = r"../datasets/cut.mpg"
-fn = r"../datasets/Helicoptorlanding.mp4"
-# fn_yaml = r"../datasets/CUHKSquare.yml"
-# fn_yaml = r"../datasets/parking2-live-feed.yml"
-fn_yaml = r"../datasets/parking-helipad.yml"
-fn_out = r"../datasets/output.avi"
+# fn = r"/cut.mpg"
+fn = r"C:/Users/windows/Downloads/Helipad-Occupancy-Sensing-master/Helicoptorlanding.mp4"
+# fn_yaml = r"/CUHKSquare.yml"
+# fn_yaml = r"/parking2-live-feed.yml"
+fn_yaml = r"C:/Users/windows/Downloads/Helipad-Occupancy-Sensing-master/parking-helipad.yml"
+fn_out = r"C:/Users/windows/Downloads/Helipad-Occupancy-Sensing-master/output.avi"
 config = {'save_video': False,
           'text_overlay': True,
           'parking_overlay': True,
@@ -115,8 +115,11 @@ while(cap.isOpened()):
             else: 
                 color = (0,0,255)
                 occupied = occupied+1
-            cv2.drawContours(frame_out, [points], contourIdx=-1,
-                             color=color, thickness=2, lineType=cv2.LINE_8)            
+            # overlay = frame_out.copy()
+            cv2.drawContours(frame_out, [points], contourIdx=-1, color=color, thickness=-1, lineType=cv2.LINE_8)
+            alpha = 0.1  # Transparency factor.
+            # Following line overlays transparent rectangle over the image
+            # frame_out = cv2.addWeighted(frame_out, alpha, frame_out, 1 - alpha, 0)            
             moments = cv2.moments(points)        
             centroid = (int(moments['m10']/moments['m00'])-3, int(moments['m01']/moments['m00'])+3)
             cv2.putText(frame_out, str(park['id']), (centroid[0]+1, centroid[1]+1), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255,255,255), 1, cv2.LINE_AA)
